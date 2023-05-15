@@ -37,9 +37,9 @@
                 <legend class="form__legend">Цвет</legend>
                 <ul class="colors">
                     <li class="colors__item"  v-for="color in colors" :key="color.id">
-                        <label class="colors__label" :for="colorId">
+                        <label class="colors__label" :for="color.id">
                             <input class="colors__radio sr-only" type="radio" name="color"
-                            :id="colorId"
+                            :id="color.id"
                             :value="color.id"
                             v-model.number="currentColorId">
                             <span class="colors__value" :style="{'background-color': color.code}">
