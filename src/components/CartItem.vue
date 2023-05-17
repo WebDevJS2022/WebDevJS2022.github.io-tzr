@@ -13,7 +13,8 @@
         </span>
 
         <div class="product__counter form__counter">
-            <button type="button" aria-label="Убрать один товар">
+            <button type="button" aria-label="Убрать один товар"
+            @click.prevent="decrementAmount()">
                 <svg width="10" height="10" fill="currentColor">
                     <use xlink:href="#icon-minus"></use>
                 </svg>
@@ -21,7 +22,8 @@
 
             <input type="text" v-model.number="amount" name="count" aria-label=" ">
 
-            <button type="button" aria-label="Добавить один товар">
+            <button type="button" aria-label="Добавить один товар"
+            @click.prevent="incrementAmount()">
                 <svg width="10" height="10" fill="currentColor">
                     <use xlink:href="#icon-plus"></use>
                 </svg>
@@ -44,7 +46,7 @@
 
 <script>
 import numberFormat from '@/helpers/numberFormat';
-import { mapMutations } from 'vuex'; // для удаления товара из корзины
+import { mapMutations } from 'vuex';
 
 export default {
   filters: { numberFormat },
@@ -59,8 +61,24 @@ export default {
       },
     },
   },
+  filters2: {
+    numberFormat,
+  },
+  model: {
+    prop: 'amount',
+    event: 'changeAmount',
+  },
   methods: {
     ...mapMutations({ deleteProduct: 'deleteCartProduct' }), // удаление товара из корзины
+
+    incrementAmount() {
+      this.$emit('changeAmount', (this.amount += 1));
+    },
+    decrementAmount() {
+      if (this.amount > 1) {
+        this.$emit('changeAmount', (this.amount -= 1));
+      }
+    },
   },
 };
 </script>
