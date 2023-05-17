@@ -26,7 +26,7 @@ export default new Vuex.Store({ // Создаем и Экспортируем н
     },
   },
   getters: {
-    cartDetailProducts(state) {
+    cartDetailProducts(state) { // подробная информация о товарах
       // eslint-disable-next-line
       return state.cartProducts.map((item) => {
         return {
@@ -34,6 +34,10 @@ export default new Vuex.Store({ // Создаем и Экспортируем н
           product: products.find((p) => p.id === item.productId),
         };
       });
+    },
+    cartTotalPrice(state, getters) { // общая стоимость покупки
+      return getters.cartDetailProducts
+        .reduce((acc, item) => (item.product.price * item.amount) + acc, 0);
     },
   },
 });

@@ -77,7 +77,7 @@
                         Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
                     </p>
                     <p class="cart__price">
-                        Итого: <span>32 970 ₽</span>
+                        Итого: <span>{{ totalPrice | numberFormat }} ₽</span>
                     </p>
 
                     <button class="cart__button button button--primery" type="submit">
@@ -96,7 +96,7 @@ import { mapGetters } from 'vuex';
 export default {
   filters: { numberFormat },
   computed: {
-    ...mapGetters({ products: 'cartDetailProducts', totalPrice: 'cartTotalPrice' }),
+    ...mapGetters({ products: 'cartDetailProducts', totalPrice: 'cartTotalPrice' }), // totalPrice для обшей стоимости товара
   },
 };
 </script>
