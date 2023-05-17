@@ -14,7 +14,6 @@ export default new Vuex.Store({ // Создаем и Экспортируем н
     addProductToCart(state, { productId, amount }) {
       // eslint-disable-next-line
       const item = state.cartProducts.find((item) => item.productId === productId);
-
       if (item) {
         item.amount += amount;
       } else {
@@ -23,6 +22,17 @@ export default new Vuex.Store({ // Создаем и Экспортируем н
           amount,
         });
       }
+    },
+    updateCartProductAmount(state, { productId, amount }) { // добавление товара в корзину
+      // eslint-disable-next-line
+      const item = state.cartProducts.find((item) => item.productId === productId);
+
+      if (item) {
+        item.amount = amount;
+      }
+    },
+    deleteCartProduct(state, productId) { // удаление товара из корзины
+      state.cartProducts = state.cartProducts.filter((item) => item.productId !== productId);
     },
   },
   getters: {
