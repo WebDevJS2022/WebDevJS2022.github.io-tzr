@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import products from '@/data/products';
 import ProductList from '@/components/ProductList.vue';
 import BasePagination from '@/components/BasePagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
@@ -35,8 +34,8 @@ export default {
   components: { ProductList, BasePagination, ProductFilter },
   data() {
     return {
-      filterPriceFrom: 0,
-      filterPriceTo: 0,
+      filterPriceFrom: null,
+      filterPriceTo: null,
       filterCategoryId: 0,
       filterColorId: 0,
       page: 1,
@@ -45,26 +44,6 @@ export default {
     };
   },
   computed: {
-    filteredProducts() {
-      let filteredProducts = products;
-      if (this.filterPriceFrom > 0) {
-        filteredProducts = filteredProducts
-          .filter((product) => product.price > this.filterPriceFrom);
-      }
-      if (this.filterPriceTo > 0) {
-        filteredProducts = filteredProducts
-          .filter((product) => product.price < this.filterPriceTo);
-      }
-      if (this.filterCategoryId) {
-        filteredProducts = filteredProducts
-          .filter((product) => product.categoryId === this.filterCategoryId);
-      }
-      if (this.filterColorId) {
-        filteredProducts = filteredProducts
-          .filter((product) => product.colorId.includes(this.filterColorId));
-      }
-      return filteredProducts;
-    },
     products() {
       return this.productsData
         ? this.productsData.items.map((product) => ({
@@ -80,13 +59,35 @@ export default {
   //  Вывод списка товаров из API + пагинация
   methods: {
     loadProducts() {
-      axios.get(`https://vue-tzr.skillbox.cc/api/products?page=${this.page}&limit=${this.productsPerPage}`)
+      axios
+        .get('https://vue-tzr.skillbox.cc/api/products', {
+          params: {
+            page: this.page, // номер страницы
+            limit: this.productsPerPage, // количество элементов
+            categoryId: this.filterCategoryId,
+            minPrice: this.filterPriceFrom,
+            maxPrice: this.filterPriceTo,
+            colorId: this.filterColorId,
+          },
+        })
         .then((response) => { this.productsData = response.data; });
     },
   },
   // пагинация из API
   watch: {
     page() {
+      this.loadProducts();
+    },
+    filterPriceFrom() {
+      this.loadProducts();
+    },
+    filterPriceTo() {
+      this.loadProducts();
+    },
+    filterCategoryId() {
+      this.loadProducts();
+    },
+    filterColorId() {
       this.loadProducts();
     },
   },
