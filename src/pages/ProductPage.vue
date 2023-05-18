@@ -81,40 +81,6 @@
                 </ul>
               </fieldset>
 
-              <fieldset class="form__block">
-                <legend class="form__legend">Объемб в ГБ:</legend>
-
-                <ul class="sizes sizes--primery">
-                  <li class="sizes__item">
-                    <label class="sizes__label" for=" ">
-                      <input class="sizes__radio sr-only" type="radio"
-                      name="sizes-item" value="32">
-                      <span class="sizes__value">
-                        32gb
-                      </span>
-                    </label>
-                  </li>
-                  <li class="sizes__item">
-                    <label class="sizes__label" for=" ">
-                      <input class="sizes__radio sr-only" type="radio"
-                      name="sizes-item" value="64">
-                      <span class="sizes__value">
-                        64gb
-                      </span>
-                    </label>
-                  </li>
-                  <li class="sizes__item">
-                    <label class="sizes__label" for=" ">
-                      <input class="sizes__radio sr-only" type="radio"
-                      name="sizes-item" value="128" checked="">
-                      <span class="sizes__value">
-                        128gb
-                      </span>
-                    </label>
-                  </li>
-                </ul>
-              </fieldset>
-
               <div class="item__row">
                 <FormCounter v-model="productAmount" :amount="productAmount" />
 
