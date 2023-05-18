@@ -19,7 +19,7 @@
 
         <li class="pagination__item">
             <button class="pagination__link pagination__link--arrow"
-            :disabled="page === 4" href="#" aria-label="Следующая страница"
+            :disabled="page === 6" href="#" aria-label="Следующая страница"
             v-on:click.prevent="nextPage()">
                 <svg width="8" height="14" fill="currentColor">
                     <use xlink:href="#icon-arrow-right"></use>

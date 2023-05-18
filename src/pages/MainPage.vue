@@ -74,14 +74,20 @@ export default {
         : [];
     },
     countProducts() {
-      return this.filteredProducts.length;
+      return this.productsData ? this.productsData.pagination.total : 0; // пагинация из API
     },
   },
-  //  Вывод списка товаров из API
+  //  Вывод списка товаров из API + пагинация
   methods: {
     loadProducts() {
-      axios.get('https://vue-tzr.skillbox.cc/api/products')
+      axios.get(`https://vue-tzr.skillbox.cc/api/products?page=${this.page}&limit=${this.productsPerPage}`)
         .then((response) => { this.productsData = response.data; });
+    },
+  },
+  // пагинация из API
+  watch: {
+    page() {
+      this.loadProducts();
     },
   },
   created() {
