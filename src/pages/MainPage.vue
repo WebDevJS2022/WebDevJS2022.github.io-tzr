@@ -28,6 +28,7 @@ import products from '@/data/products';
 import ProductList from '@/components/ProductList.vue';
 import BasePagination from '@/components/BasePagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
+import axios from 'axios';
 
 export default {
   name: 'MainPage',
@@ -40,6 +41,7 @@ export default {
       filterColorId: 0,
       page: 1,
       productsPerPage: 3,
+      productsData: null, // Вывод списка товаров из API
     };
   },
   computed: {
@@ -64,12 +66,26 @@ export default {
       return filteredProducts;
     },
     products() {
-      const offset = (this.page - 1) * this.productsPerPage;
-      return this.filteredProducts.slice(offset, offset + this.productsPerPage);
+      return this.productsData
+        ? this.productsData.items.map((product) => ({
+          ...product,
+          image: product.preview.file.url,
+        }))
+        : [];
     },
     countProducts() {
       return this.filteredProducts.length;
     },
+  },
+  //  Вывод списка товаров из API
+  methods: {
+    loadProducts() {
+      axios.get('https://vue-tzr.skillbox.cc/api/products')
+        .then((response) => { this.productsData = response.data; });
+    },
+  },
+  created() {
+    this.loadProducts();
   },
 };
 </script>
