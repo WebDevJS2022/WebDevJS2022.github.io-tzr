@@ -59,18 +59,21 @@ export default {
   //  Вывод списка товаров из API + пагинация
   methods: {
     loadProducts() {
-      axios
-        .get('https://vue-tzr.skillbox.cc/api/products', {
-          params: {
-            page: this.page, // номер страницы
-            limit: this.productsPerPage, // количество элементов
-            categoryId: this.filterCategoryId,
-            minPrice: this.filterPriceFrom,
-            maxPrice: this.filterPriceTo,
-            colorId: this.filterColorId,
-          },
-        })
-        .then((response) => { this.productsData = response.data; });
+      clearTimeout(this.loadProductsTimer);
+      this.loadProductsTimer = setTimeout(() => {
+        axios
+          .get('https://vue-tzr.skillbox.cc/api/products', {
+            params: {
+              page: this.page, // номер страницы
+              limit: this.productsPerPage, // количество элементов
+              categoryId: this.filterCategoryId,
+              minPrice: this.filterPriceFrom,
+              maxPrice: this.filterPriceTo,
+              colorId: this.filterColorId,
+            },
+          })
+          .then((response) => { this.productsData = response.data; });
+      }, 0);
     },
   },
   // пагинация из API
