@@ -1,5 +1,7 @@
 <template>
-    <main class="content container">
+    <main class="content container" v-if="productLoading">Загрузка товара...</main>
+    <main class="content container" v-else-if="!productData">Не удалось загрузить товар</main>
+    <main class="content container" v-else>
       <div class="content__top">
         <ul class="breadcrumbs">
           <li class="breadcrumbs__item">
@@ -23,7 +25,7 @@
       <section class="item">
         <div class="item__pics pics">
           <div class="pics__wrapper">
-            <img width="570" height="570" :src="product.image"
+            <img width="570" height="570" :src="product.preview.file.url"
             :alt="product.title">
           </div>
           <ul class="pics__list">
@@ -68,13 +70,15 @@
               <fieldset class="form__block">
                 <legend class="form__legend">Цвет:</legend>
                 <ul class="colors">
-                  <li class="colors__item" v-for="color in product.colors"
-                  :key="color.index">
-                    <label class="colors__label" :for="product.color">
+                  <li class="colors__item"
+                  v-for="color in product.colors" :key="color.id">
+                    <label class="colors__label" :for="color.id">
                       <input class="colors__radio sr-only" type="radio"
-                      name="color-item" :value="color.index"
-                      :id="product.color">
-                      <span class="colors__value" :style="{'background-color': color.code}">
+                      name="color-item"
+                      :value="color.code"
+                      :id="color.id"
+                      v-model.number="color.code">
+                      <span class="colors__value" :style="{'background-color': color.color.code}">
                       </span>
                     </label>
                   </li>
@@ -161,17 +165,19 @@
   </template>
 
 <script>
-import products from '@/data/products';
-import categories from '@/data/categories';
 import gotoPage from '@/helpers/gotoPage';
 import numberFormat from '@/helpers/numberFormat';
 import FormCounter from '@/components/FormCounter.vue';
+import axios from 'axios';
 
 export default {
   components: { FormCounter },
   data() {
     return {
       productAmount: 1,
+      productData: null, // выводим товар из API
+      productLoading: false, // загрузка данных
+      productLoadingFailed: false, // обработка ошибок
     };
   },
   // опция, объект методов filters работает так же как methods
@@ -180,12 +186,10 @@ export default {
   },
   computed: {
     product() {
-      return products
-        .find((product) => product.id === +this.$route.params.id);
+      return this.productData;
     },
     category() {
-      return categories
-        .find((category) => category.id === this.product.categoryId);
+      return this.productData.category;
     },
   },
   methods: {
@@ -196,6 +200,18 @@ export default {
         { productId: this.product.id, amount: this.productAmount },
       );
     },
+    loadProduct() {
+      this.productLoading = true; // в начале загрузки сообщаем что загрузка идет
+      // в начале загрузки очищаем от свойства productLoadingFailed,тк оно сообщает об ошибке
+      this.productLoadingFailed = false;
+      axios.get(`https://vue-tzr.skillbox.cc/api/products/${this.$route.params.id}`)
+        .then((response) => { this.productData = response.data; })
+        .catch(() => { this.productLoadingFailed = true; })
+        .then(() => { this.productLoading = false; });
+    },
+  },
+  created() {
+    this.loadProduct();
   },
 };
 </script>
