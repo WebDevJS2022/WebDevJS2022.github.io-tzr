@@ -16,7 +16,8 @@
 
      <section class="catalog">
 
-      <div v-if="productsLoading" class="loading">Загрузка товаров...</div>
+      <div v-if="productsLoading" class="loading">Загрузка товаров...
+        <transition><img alt="preloader" src="/img/preloader.gif"></transition></div>
 
        <ProductList :products="products"/>
        <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />
